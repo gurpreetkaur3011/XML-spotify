@@ -1,11 +1,11 @@
-// featured-albums.js
+// featured-artists.js
 
 document.addEventListener('DOMContentLoaded', async function () {
-    const featuredAlbumsContainer = document.getElementById('albums-container');
 
-    // Replace these with your actual client ID and client secret
-    const clientId = 'da7a73500577472fa4ca42bed4cb1f3e';
-    const clientSecret = 'dd71958f547f492fb6db0e57596ecc9c';   
+    const artistsContainer = document.getElementById('albums-container'); 
+
+    const clientId = '4660eaac02f64d879d0db421b0c5893f';
+    const clientSecret = '194eeeb78702486e996c7b8b4582eab5';
 
     // Function to retrieve access token
     const getToken = async () => {
@@ -22,10 +22,11 @@ document.addEventListener('DOMContentLoaded', async function () {
         return data.access_token;
     };
 
-    // Fetch featured albums using the access token
+    // Fetch artist information using the access token
     const token = await getToken();
-    const apiUrl = 'https://api.spotify.com/v1/shows?ids=5CfCWKI5pZ28U0uOzXkDHe%2C5as3aKmN2k11yfDDDSrvaZ%2C7H4xqBcvVafN7hs3BJMeHE%2C5aAR1VPIQ6rarijDBYPDtw%2C1SqFhPqMP5BtRF9DHUqsnZ%2C298KXRHiO1IRCLu2YaphQ6%2C79o0B7orfEgaVl8t3lG0rX%2C3U3QbjHl5qauiqPMYGkrbh%2C5pwBAjuJJAOt7cED5Lkjnk%2C659pdH7WFYgHMUuyg2MTBe%2C7gKwwMLFLc6RmjmRpbMtEO%2C0obq69pEi052aIDkIwL3Eu';
-    
+    const artistIds = '28DlNBW2UlEVVgTuCcYtTe%2C2CIMQHirSU0MQqyYHq0eOx%2C53XhwfbYqKCa1cC15pYq2q%2C06HL4z0CvFAxyc27GXpf02%2C4YRxDV8wJFPHPTeXepOstw%2C6eUKZXaKkcviH0Ku9w2n3V%2C7qjJw7ZM2ekDSahLXPjIlN%2C66CXWjxzNUsdJxJ2JdwvnR%2C7uDdl5V5AETSFY7K3muu22%2C7nwUJBm0HE4ZxD3f5cy5ok%2C0PCCGZ0wGLizHt2KZ7hhA2%2C64DvMieEUCdrYKmEIhDt8G';
+    const apiUrl = `https://api.spotify.com/v1/artists?ids=${artistIds}`;
+
     fetch(apiUrl, {
         headers: {
             'Authorization': 'Bearer ' + token,
@@ -33,56 +34,45 @@ document.addEventListener('DOMContentLoaded', async function () {
     })
     .then(response => response.json())
     .then(data => {
-        const albums = data.shows;
-        albums.forEach(album => {
-            const card = createCard(album);
-            featuredAlbumsContainer.appendChild(card);
+        data.artists.forEach(artist => {
+            const artistCard = createArtistCard(artist);
+            artistsContainer.appendChild(artistCard);
         });
     })
-    .catch(error => console.error('Error fetching data:', error));
-    
-    function createCard(album) {
+    .catch(error => console.error('Error fetching artist data:', error));
+
+    function createArtistCard(artist) {
         const card = document.createElement('div');
         card.classList.add('card');
-    
-        // Display album images
-        const firstImage = album.images[0];
-        if (firstImage) {
+
+        // Display artist image
+        const artistImage = artist.images[0];
+        if (artistImage) {
             const img = document.createElement('img');
-            img.src = firstImage.url;
-            img.alt = 'Album Cover';
+            img.src = artistImage.url;
+            img.alt = 'Artist Image';
             card.appendChild(img);
         }
-    
-        // Display other album details
-        const title = document.createElement('h4');
-        title.textContent = album.name;
-        card.appendChild(title);
-    
-        const artist = document.createElement('p');
-        artist.textContent = 'Artist: ' + album.name;
-        card.appendChild(artist);
+
+        // Display other artist details
+        const name = document.createElement('h4');
+        name.textContent = artist.name;
+        card.appendChild(name);
+
+        // Additional artist details
+        const popularity = document.createElement('p');
+        popularity.textContent = 'Popularity: ' + artist.popularity;
+        card.appendChild(popularity);
+
+        const followers = document.createElement('p');
+        followers.textContent = 'Followers: ' + artist.followers.total;
+        card.appendChild(followers);
 
 
-        const ep = document.createElement('p');
-        ep.textContent = 'Total episodes: ' + album.total_episodes;
-        card.appendChild(ep);
-
-        const show = document.createElement('p');
-        show.textContent = 'Show Type: ' + album.media_type;
-        card.appendChild(show);
-
-        const pub = document.createElement('p');
-        pub.textContent = 'Publisher: ' + album.publisher;
-        card.appendChild(pub);
-    
-        // Add more details as needed
-    
         return card;
     }
-    
-});
 
+});
 
 
 // Add New Playlists

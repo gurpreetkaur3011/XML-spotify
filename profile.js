@@ -1,88 +1,76 @@
-// featured-albums.js
 
 document.addEventListener('DOMContentLoaded', async function () {
-    const featuredAlbumsContainer = document.getElementById('albums-container');
+    const albumsContainer = document.getElementById('albums-container');
 
-    // Replace these with your actual client ID and client secret
-    const clientId = 'da7a73500577472fa4ca42bed4cb1f3e';
-    const clientSecret = 'dd71958f547f492fb6db0e57596ecc9c';   
+    document.getElementById('getProfileBtn').addEventListener('click', () => {
 
-    // Function to retrieve access token
-    const getToken = async () => {
-        const result = await fetch("https://accounts.spotify.com/api/token", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "Authorization": "Basic " + btoa(clientId + ":" + clientSecret),
-            },
-            body: "grant_type=client_credentials",
-        });
-
-        const data = await result.json();
-        return data.access_token;
-    };
-
-    // Fetch featured albums using the access token
-    const token = await getToken();
-    const apiUrl = 'https://api.spotify.com/v1/shows?ids=5CfCWKI5pZ28U0uOzXkDHe%2C5as3aKmN2k11yfDDDSrvaZ%2C7H4xqBcvVafN7hs3BJMeHE%2C5aAR1VPIQ6rarijDBYPDtw%2C1SqFhPqMP5BtRF9DHUqsnZ%2C298KXRHiO1IRCLu2YaphQ6%2C79o0B7orfEgaVl8t3lG0rX%2C3U3QbjHl5qauiqPMYGkrbh%2C5pwBAjuJJAOt7cED5Lkjnk%2C659pdH7WFYgHMUuyg2MTBe%2C7gKwwMLFLc6RmjmRpbMtEO%2C0obq69pEi052aIDkIwL3Eu';
     
-    fetch(apiUrl, {
+    const clientId = 'da7a73500577472fa4ca42bed4cb1f3e';
+    const redirectUri = 'http://127.0.0.1:5500/profile.html';
+    const scopes = 'user-read-private user-read-email';
+
+    const authorizeUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scopes}`;
+    window.location.href = authorizeUrl;
+});
+
+// Extract the authorization code from the URL
+const urlParams = new URLSearchParams(window.location.hash.substr(1));
+const accessToken = urlParams.get('access_token');
+
+
+// Handle access token in the URL for user details
+// const urlParams = new URLSearchParams(window.location.hash.substr(1));
+// const accessToken = urlParams.get('access_token');
+
+if (accessToken) {
+    // Fetch user details using the access token
+    fetch('https://api.spotify.com/v1/me', {
         headers: {
-            'Authorization': 'Bearer ' + token,
+            'Authorization': 'Bearer ' + accessToken,
         },
     })
     .then(response => response.json())
     .then(data => {
-        const albums = data.shows;
-        albums.forEach(album => {
-            const card = createCard(album);
-            featuredAlbumsContainer.appendChild(card);
-        });
+        const profileCard = createProfileCard(data);
+        albumsContainer.appendChild(profileCard);
     })
-    .catch(error => console.error('Error fetching data:', error));
-    
-    function createCard(album) {
-        const card = document.createElement('div');
-        card.classList.add('card');
-    
-        // Display album images
-        const firstImage = album.images[0];
-        if (firstImage) {
-            const img = document.createElement('img');
-            img.src = firstImage.url;
-            img.alt = 'Album Cover';
-            card.appendChild(img);
-        }
-    
-        // Display other album details
-        const title = document.createElement('h4');
-        title.textContent = album.name;
-        card.appendChild(title);
-    
-        const artist = document.createElement('p');
-        artist.textContent = 'Artist: ' + album.name;
-        card.appendChild(artist);
+    .catch(error => console.error('Error fetching user details:', error));
+}
 
+// Get Profile function
+function createProfileCard(profile) {
+    const card = document.createElement('div');
+    card.className = 'card';
 
-        const ep = document.createElement('p');
-        ep.textContent = 'Total episodes: ' + album.total_episodes;
-        card.appendChild(ep);
+    const image = document.createElement('img');
+    image.src =  profile.images[0].url // You can replace this with the user's profile image URL
+    image.alt = profile.display_name;
 
-        const show = document.createElement('p');
-        show.textContent = 'Show Type: ' + album.media_type;
-        card.appendChild(show);
+    const title = document.createElement('h4');
+    title.textContent = profile.display_name;
 
-        const pub = document.createElement('p');
-        pub.textContent = 'Publisher: ' + album.publisher;
-        card.appendChild(pub);
-    
-        // Add more details as needed
-    
-        return card;
-    }
-    
+    const email = document.createElement('p');
+    email.textContent = profile.email;
+
+    const country = document.createElement('p');
+    country.textContent = profile.country;
+
+    const followers = document.createElement('p');
+    followers.textContent = `Followers: ${profile.followers.total}`;
+
+    const spotifyUri = document.createElement('p');
+    spotifyUri.textContent = `Spotify URI: ${profile.uri}`;
+
+    card.appendChild(image);
+    card.appendChild(title);
+    card.appendChild(email);
+    card.appendChild(country);
+    card.appendChild(followers);
+    card.appendChild(spotifyUri);
+
+    return card;
+}
 });
-
 
 
 // Add New Playlists

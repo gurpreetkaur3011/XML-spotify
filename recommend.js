@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // Fetch featured albums using the access token
     const token = await getToken();
-    const apiUrl = 'https://api.spotify.com/v1/shows?ids=5CfCWKI5pZ28U0uOzXkDHe%2C5as3aKmN2k11yfDDDSrvaZ%2C7H4xqBcvVafN7hs3BJMeHE%2C5aAR1VPIQ6rarijDBYPDtw%2C1SqFhPqMP5BtRF9DHUqsnZ%2C298KXRHiO1IRCLu2YaphQ6%2C79o0B7orfEgaVl8t3lG0rX%2C3U3QbjHl5qauiqPMYGkrbh%2C5pwBAjuJJAOt7cED5Lkjnk%2C659pdH7WFYgHMUuyg2MTBe%2C7gKwwMLFLc6RmjmRpbMtEO%2C0obq69pEi052aIDkIwL3Eu';
+    const apiUrl = 'https://api.spotify.com/v1/recommendations?seed_artists=4NHQUGzhtTLFvgF5SZesLK&seed_genres=classical%2Ccountry&seed_tracks=0c6xIDDpzE81m2q797ordA';
     
     fetch(apiUrl, {
         headers: {
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     })
     .then(response => response.json())
     .then(data => {
-        const albums = data.shows;
+        const albums = data.tracks;
         albums.forEach(album => {
             const card = createCard(album);
             featuredAlbumsContainer.appendChild(card);
@@ -42,11 +42,13 @@ document.addEventListener('DOMContentLoaded', async function () {
     .catch(error => console.error('Error fetching data:', error));
     
     function createCard(album) {
+       // alert(album.album.artists[0].album_type)
         const card = document.createElement('div');
         card.classList.add('card');
     
-        // Display album images
-        const firstImage = album.images[0];
+        //Display album images
+        const firstImage = album.album.images[0];
+        //alert(firstImage)
         if (firstImage) {
             const img = document.createElement('img');
             img.src = firstImage.url;
@@ -60,26 +62,15 @@ document.addEventListener('DOMContentLoaded', async function () {
         card.appendChild(title);
     
         const artist = document.createElement('p');
-        artist.textContent = 'Artist: ' + album.name;
+        artist.textContent = 'Artist: ' + album.artists[0].name;
         card.appendChild(artist);
-
-
-        const ep = document.createElement('p');
-        ep.textContent = 'Total episodes: ' + album.total_episodes;
-        card.appendChild(ep);
-
-        const show = document.createElement('p');
-        show.textContent = 'Show Type: ' + album.media_type;
-        card.appendChild(show);
-
-        const pub = document.createElement('p');
-        pub.textContent = 'Publisher: ' + album.publisher;
-        card.appendChild(pub);
+    
     
         // Add more details as needed
     
         return card;
     }
+    
     
 });
 
