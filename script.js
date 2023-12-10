@@ -24,6 +24,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     const token = await getToken();
     const apiUrl = 'https://api.spotify.com/v1/browse/new-releases?country=US&offset=0&limit=8';
 
+    
+
     fetch(apiUrl, {
         headers: {
             'Authorization': 'Bearer ' + token,
@@ -85,11 +87,6 @@ document.addEventListener('DOMContentLoaded', async function () {
 const urlParams = new URLSearchParams(window.location.hash.substr(1));
 const accessToken = urlParams.get('access_token');
 
-
-    // Handle access token in the URL for user details
-    // const urlParams = new URLSearchParams(window.location.hash.substr(1));
-    // const accessToken = urlParams.get('access_token');
-
     if (accessToken) {
         // Fetch user details using the access token
         fetch('https://api.spotify.com/v1/me', {
@@ -115,8 +112,8 @@ const accessToken = urlParams.get('access_token');
         card.className = 'card';
 
         const image = document.createElement('img');
-        image.src = 'https://via.placeholder.com/150'; // You can replace this with the user's profile image URL
-        image.alt = profile.display_name;
+    image.src =  profile.images[0].url // You can replace this with the user's profile image URL
+    image.alt = profile.display_name;
 
         const title = document.createElement('h4');
         title.textContent = profile.display_name;
@@ -144,8 +141,7 @@ const accessToken = urlParams.get('access_token');
     }
 });
 
-// Add New Playlists
-document.getElementById('authorizeBtn').addEventListener('click', () => {
+function handleAuthorization() {
     const clientId = 'da7a73500577472fa4ca42bed4cb1f3e';
     const redirectUri = 'http://127.0.0.1:5500/index.html';
     const scopes = 'playlist-modify-public playlist-modify-private';
@@ -153,7 +149,11 @@ document.getElementById('authorizeBtn').addEventListener('click', () => {
     const authorizeUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${scopes}`;
 
     window.location.href = authorizeUrl;
-});
+}
+
+// Event listener for 'Authorize' button
+document.getElementById('authorizeBtn').addEventListener('click', handleAuthorization);
+
 
 // Extract the authorization code from the URL for creating playlists
 const urlParamsCreatePlaylist = new URLSearchParams(window.location.search);
@@ -207,6 +207,11 @@ function createPlaylist(accessToken) {
 }
 
 
+function sleep(ms) {
+    const start = Date.now();
+    while (Date.now() - start < ms) {}
+}
+
 function fetchPlaylistDetails(accessToken, playlistId) {
     const apiUrl = `https://api.spotify.com/v1/playlists/${playlistId}`;
 
@@ -218,16 +223,35 @@ function fetchPlaylistDetails(accessToken, playlistId) {
         .then(response => response.json())
         .then(data => {
             // Update the HTML to display the playlist details
-            displayPlaylistDetails(data);
+            //add songs here
             addSongsToPlaylist(accessToken, playlistId);
-
+            fetchgetplayDetails(accessToken, playlistId);
 
         })
         .catch(error => console.error('Error fetching playlist details:', error));
 }
 
-function displayPlaylistDetails(playlist) {
+function fetchgetplayDetails(accessToken, playlistId) {
+   sleep(500);
+
+    const apiUrl = `https://api.spotify.com/v1/playlists/${playlistId}`;
+
+    fetch(apiUrl, {
+        headers: {
+            'Authorization': 'Bearer ' + accessToken,
+        },
+    })
+        .then(response => response.json())
+        .then(data => {
+            // Update the HTML to display the playlist details
+            displaygetplayDetails(data);
+        })
+        .catch(error => console.error('Error fetching playlist details:', error));
+}
+
+function displaygetplayDetails(playlist) {
     const playlistContainer = document.getElementById('playlist-container');
+    // playlistContainer.innerHTML='';
     
     // Create elements to display playlist details
     const playlistName = document.createElement('p');
@@ -245,6 +269,13 @@ function displayPlaylistDetails(playlist) {
     const user = document.createElement('p');
     user.textContent = `Type: ${playlist.owner.type}`;
 
+    const public = document.createElement('p');
+    public.textContent = `IS_PUBLIC: ${playlist.public}`;
+
+    const date = document.createElement('p');
+    date.textContent = `Added At: ${playlist.tracks.items[0].added_at}`;
+
+
    
     // Append elements to the playlist container
     playlistContainer.appendChild(playlistName);
@@ -252,7 +283,8 @@ function displayPlaylistDetails(playlist) {
     playlistContainer.appendChild(playlistTracks);
     playlistContainer.appendChild(name);
     playlistContainer.appendChild(user);
-
+    playlistContainer.appendChild(public);
+    playlistContainer.appendChild(date)
 }
 
 function addSongsToPlaylist(accessToken, playlistId) {

@@ -149,13 +149,62 @@ function fetchPlaylistDetails(accessToken, playlistId) {
     })
         .then(response => response.json())
         .then(data => {
-            // Update the HTML to display the playlist details
-            displayPlaylistDetails(data);
+            addSongsToPlaylist(accessToken, playlistId);
+
+            fetchgetplayDetails(accessToken, playlistId); 
         })
         .catch(error => console.error('Error fetching playlist details:', error));
 }
 
-function displayPlaylistDetails(playlist) {
+
+
+function addSongsToPlaylist(accessToken, playlistId) {
+    const apiUrl = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
+
+    fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken,
+        },
+        body: JSON.stringify({
+            uris: [
+                'spotify:track:4iV5W9uYEdYUVa79Axb7Rh',
+                'spotify:track:1301WleyT98MSxVHPZCA6M',
+                'spotify:track:2KHtjCyCzsbkKh6Nmsnbz2',
+            ],
+        }),
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Songs added to the playlist:', data);
+        })
+        .catch(error => console.error('Error adding songs to playlist:', error));
+}
+
+function sleep(ms) {
+    const start = Date.now();
+    while (Date.now() - start < ms) {}
+}
+
+function fetchgetplayDetails(accessToken, playlistId) {
+    sleep(500);
+    const apiUrl = `https://api.spotify.com/v1/playlists/${playlistId}`;
+
+    fetch(apiUrl, {
+        headers: {
+            'Authorization': 'Bearer ' + accessToken,
+        },
+    })
+        .then(response => response.json())
+        .then(data => {
+            // Update the HTML to display the playlist details
+            displaygetplayDetails(data);
+        })
+        .catch(error => console.error('Error fetching playlist details:', error));
+}
+
+function displaygetplayDetails(playlist) {
     const playlistContainer = document.getElementById('playlist-container');
     
     // Create elements to display playlist details
@@ -174,6 +223,12 @@ function displayPlaylistDetails(playlist) {
     const user = document.createElement('p');
     user.textContent = `Type: ${playlist.owner.type}`;
 
+    const public = document.createElement('p');
+    public.textContent = `IS_PUBLIC: ${playlist.public}`;
+
+    const date = document.createElement('p');
+    date.textContent = `Added At: ${playlist.tracks.items[0].added_at}`;
+
    
     // Append elements to the playlist container
     playlistContainer.appendChild(playlistName);
@@ -181,5 +236,7 @@ function displayPlaylistDetails(playlist) {
     playlistContainer.appendChild(playlistTracks);
     playlistContainer.appendChild(name);
     playlistContainer.appendChild(user);
-
+    playlistContainer.appendChild(public);
+    playlistContainer.appendChild(date);
 }
+
