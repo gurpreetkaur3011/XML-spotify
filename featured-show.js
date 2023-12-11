@@ -1,5 +1,3 @@
-// featured-show.js
-
 document.addEventListener('DOMContentLoaded', async function () {
     const featuredAlbumsContainer = document.getElementById('albums-container');
 

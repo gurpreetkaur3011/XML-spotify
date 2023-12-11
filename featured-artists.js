@@ -1,5 +1,6 @@
 // featured-artists.js
 
+
 document.addEventListener('DOMContentLoaded', async function () {
 
     const artistsContainer = document.getElementById('albums-container');
