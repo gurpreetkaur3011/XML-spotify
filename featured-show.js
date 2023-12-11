@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // Fetch featured albums using the access token
     const token = await getToken();
-    const apiUrl = 'https://api.spotify.com/v1/shows?ids=5CfCWKI5pZ28U0uOzXkDHe%2C5as3aKmN2k11yfDDDSrvaZ%2C7H4xqBcvVafN7hs3BJMeHE%2C5aAR1VPIQ6rarijDBYPDtw%2C1SqFhPqMP5BtRF9DHUqsnZ%2C298KXRHiO1IRCLu2YaphQ6%2C79o0B7orfEgaVl8t3lG0rX%2C3U3QbjHl5qauiqPMYGkrbh%2C5pwBAjuJJAOt7cED5Lkjnk%2C659pdH7WFYgHMUuyg2MTBe%2C7gKwwMLFLc6RmjmRpbMtEO%2C0obq69pEi052aIDkIwL3Eu';
+    const apiUrl = 'https://api.spotify.com/v1/shows?ids=1VXcH8QHkjRcTCEd88U3ti%2C5as3aKmN2k11yfDDDSrvaZ%2C7H4xqBcvVafN7hs3BJMeHE%2C5aAR1VPIQ6rarijDBYPDtw%2C1SqFhPqMP5BtRF9DHUqsnZ%2C298KXRHiO1IRCLu2YaphQ6%2C79o0B7orfEgaVl8t3lG0rX%2C3U3QbjHl5qauiqPMYGkrbh%2C5pwBAjuJJAOt7cED5Lkjnk%2C659pdH7WFYgHMUuyg2MTBe%2C7gKwwMLFLc6RmjmRpbMtEO%2C0obq69pEi052aIDkIwL3Eu';
 
     fetch(apiUrl, {
         headers: {
