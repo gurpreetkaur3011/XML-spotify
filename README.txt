@@ -25,5 +25,6 @@ HOW TO USE :
     Get Profile
     Get Recommendations
 3. Download the zipped folder and extract it and run it using the visual studio.
-
+4. The project can also be found on github 
+     link : https://github.com/gurpreetkaur3011/XML-spotify.git
 
