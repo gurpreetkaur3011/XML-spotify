@@ -9,3 +9,21 @@ Add the following declaration at the top of .html files
 *	Group member Name:	Student IDs:	Date:
 Gurpreet Kaur  | N01567661 | 11/12/2023
 Lakshmi Priyanka Annapureddy | N01537387 | 11/12/2023
+
+
+HOW TO USE :
+1. The index.html is the main page.
+2. The app provides alot of functionality using the spotify API :
+    Get New releases
+    Get several Albums
+    Get several Shows
+    Get several Artists
+    Search
+    Create playlist
+    Add tracks to playlists 
+    Get the playlists
+    Get Profile
+    Get Recommendations
+3. Download the zipped folder and extract it and run it using the visual studio.
+
+
