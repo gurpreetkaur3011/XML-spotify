@@ -4,72 +4,68 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     document.getElementById('getProfileBtn').addEventListener('click', () => {
 
-    
-    const clientId = 'da7a73500577472fa4ca42bed4cb1f3e';
-    const redirectUri = 'http://127.0.0.1:5500/profile.html';
-    const scopes = 'user-read-private user-read-email';
 
-    const authorizeUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scopes}`;
-    window.location.href = authorizeUrl;
-});
+        const clientId = 'da7a73500577472fa4ca42bed4cb1f3e';
+        const redirectUri = 'http://127.0.0.1:5500/profile.html';
+        const scopes = 'user-read-private user-read-email';
 
-// Extract the authorization code from the URL
-const urlParams = new URLSearchParams(window.location.hash.substr(1));
-const accessToken = urlParams.get('access_token');
+        const authorizeUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scopes}`;
+        window.location.href = authorizeUrl;
+    });
+
+    // Extract the authorization code from the URL
+    const urlParams = new URLSearchParams(window.location.hash.substr(1));
+    const accessToken = urlParams.get('access_token');
 
 
-// Handle access token in the URL for user details
-// const urlParams = new URLSearchParams(window.location.hash.substr(1));
-// const accessToken = urlParams.get('access_token');
+    if (accessToken) {
+        // Fetch user details using the access token
+        fetch('https://api.spotify.com/v1/me', {
+            headers: {
+                'Authorization': 'Bearer ' + accessToken,
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                const profileCard = createProfileCard(data);
+                albumsContainer.appendChild(profileCard);
+            })
+            .catch(error => console.error('Error fetching user details:', error));
+    }
 
-if (accessToken) {
-    // Fetch user details using the access token
-    fetch('https://api.spotify.com/v1/me', {
-        headers: {
-            'Authorization': 'Bearer ' + accessToken,
-        },
-    })
-    .then(response => response.json())
-    .then(data => {
-        const profileCard = createProfileCard(data);
-        albumsContainer.appendChild(profileCard);
-    })
-    .catch(error => console.error('Error fetching user details:', error));
-}
+    // Get Profile function
+    function createProfileCard(profile) {
+        const card = document.createElement('div');
+        card.className = 'card';
 
-// Get Profile function
-function createProfileCard(profile) {
-    const card = document.createElement('div');
-    card.className = 'card';
+        const image = document.createElement('img');
+        image.src = profile.images[0].url
+        image.alt = profile.display_name;
 
-    const image = document.createElement('img');
-    image.src =  profile.images[0].url // You can replace this with the user's profile image URL
-    image.alt = profile.display_name;
+        const title = document.createElement('h4');
+        title.textContent = profile.display_name;
 
-    const title = document.createElement('h4');
-    title.textContent = profile.display_name;
+        const email = document.createElement('p');
+        email.textContent = profile.email;
 
-    const email = document.createElement('p');
-    email.textContent = profile.email;
+        const country = document.createElement('p');
+        country.textContent = profile.country;
 
-    const country = document.createElement('p');
-    country.textContent = profile.country;
+        const followers = document.createElement('p');
+        followers.textContent = `Followers: ${profile.followers.total}`;
 
-    const followers = document.createElement('p');
-    followers.textContent = `Followers: ${profile.followers.total}`;
+        const spotifyUri = document.createElement('p');
+        spotifyUri.textContent = `Spotify URI: ${profile.uri}`;
 
-    const spotifyUri = document.createElement('p');
-    spotifyUri.textContent = `Spotify URI: ${profile.uri}`;
+        card.appendChild(image);
+        card.appendChild(title);
+        card.appendChild(email);
+        card.appendChild(country);
+        card.appendChild(followers);
+        card.appendChild(spotifyUri);
 
-    card.appendChild(image);
-    card.appendChild(title);
-    card.appendChild(email);
-    card.appendChild(country);
-    card.appendChild(followers);
-    card.appendChild(spotifyUri);
-
-    return card;
-}
+        return card;
+    }
 });
 
 
@@ -148,7 +144,7 @@ function fetchPlaylistDetails(accessToken, playlistId) {
         .then(data => {
             addSongsToPlaylist(accessToken, playlistId);
 
-            fetchgetplayDetails(accessToken, playlistId); 
+            fetchgetplayDetails(accessToken, playlistId);
         })
         .catch(error => console.error('Error fetching playlist details:', error));
 }
@@ -180,7 +176,7 @@ function addSongsToPlaylist(accessToken, playlistId) {
 }
 function sleep(ms) {
     const start = Date.now();
-    while (Date.now() - start < ms) {}
+    while (Date.now() - start < ms) { }
 }
 
 function fetchgetplayDetails(accessToken, playlistId) {
@@ -202,7 +198,7 @@ function fetchgetplayDetails(accessToken, playlistId) {
 
 function displaygetplayDetails(playlist) {
     const playlistContainer = document.getElementById('playlist-container');
-    
+
     // Create elements to display playlist details
     const playlistName = document.createElement('p');
     playlistName.textContent = `Playlist Name: ${playlist.name}`;
@@ -225,7 +221,7 @@ function displaygetplayDetails(playlist) {
     const date = document.createElement('p');
     date.textContent = `Added At: ${playlist.tracks.items[0].added_at}`;
 
-   
+
     // Append elements to the playlist container
     playlistContainer.appendChild(playlistName);
     playlistContainer.appendChild(playlistDescription);

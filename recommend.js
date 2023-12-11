@@ -1,11 +1,9 @@
-// featured-albums.js
-
 document.addEventListener('DOMContentLoaded', async function () {
     const featuredAlbumsContainer = document.getElementById('albums-container');
 
     // Replace these with your actual client ID and client secret
     const clientId = 'da7a73500577472fa4ca42bed4cb1f3e';
-    const clientSecret = 'dd71958f547f492fb6db0e57596ecc9c';   
+    const clientSecret = 'dd71958f547f492fb6db0e57596ecc9c';
 
     // Function to retrieve access token
     const getToken = async () => {
@@ -25,53 +23,47 @@ document.addEventListener('DOMContentLoaded', async function () {
     // Fetch featured albums using the access token
     const token = await getToken();
     const apiUrl = 'https://api.spotify.com/v1/recommendations?seed_artists=4NHQUGzhtTLFvgF5SZesLK&seed_genres=classical%2Ccountry&seed_tracks=0c6xIDDpzE81m2q797ordA';
-    
+
     fetch(apiUrl, {
         headers: {
             'Authorization': 'Bearer ' + token,
         },
     })
-    .then(response => response.json())
-    .then(data => {
-        const albums = data.tracks;
-        albums.forEach(album => {
-            const card = createCard(album);
-            featuredAlbumsContainer.appendChild(card);
-        });
-    })
-    .catch(error => console.error('Error fetching data:', error));
-    
+        .then(response => response.json())
+        .then(data => {
+            const albums = data.tracks;
+            albums.forEach(album => {
+                const card = createCard(album);
+                featuredAlbumsContainer.appendChild(card);
+            });
+        })
+        .catch(error => console.error('Error fetching data:', error));
+
     function createCard(album) {
-       // alert(album.album.artists[0].album_type)
         const card = document.createElement('div');
         card.classList.add('card');
-    
+
         //Display album images
         const firstImage = album.album.images[0];
-        //alert(firstImage)
         if (firstImage) {
             const img = document.createElement('img');
             img.src = firstImage.url;
             img.alt = 'Album Cover';
             card.appendChild(img);
         }
-    
-        // Display other album details
+
         const title = document.createElement('h4');
         title.textContent = album.name;
         card.appendChild(title);
-    
+
         const artist = document.createElement('p');
         artist.textContent = 'Artist: ' + album.artists[0].name;
         card.appendChild(artist);
-    
-    
-        // Add more details as needed
-    
+
         return card;
     }
-    
-    
+
+
 });
 
 
@@ -108,7 +100,6 @@ if (authorizationCodeCreatePlaylist) {
         .then(response => response.json())
         .then(data => {
             const accessTokenCreatePlaylist = data.access_token;
-            // Use the access token to make requests on behalf of the user
             createPlaylist(accessTokenCreatePlaylist);
         })
         .catch(error => console.error('Error fetching access token:', error));
@@ -151,7 +142,7 @@ function fetchPlaylistDetails(accessToken, playlistId) {
         .then(data => {
             addSongsToPlaylist(accessToken, playlistId);
 
-            fetchgetplayDetails(accessToken, playlistId); 
+            fetchgetplayDetails(accessToken, playlistId);
         })
         .catch(error => console.error('Error fetching playlist details:', error));
 }
@@ -184,7 +175,7 @@ function addSongsToPlaylist(accessToken, playlistId) {
 
 function sleep(ms) {
     const start = Date.now();
-    while (Date.now() - start < ms) {}
+    while (Date.now() - start < ms) { }
 }
 
 function fetchgetplayDetails(accessToken, playlistId) {
@@ -206,7 +197,7 @@ function fetchgetplayDetails(accessToken, playlistId) {
 
 function displaygetplayDetails(playlist) {
     const playlistContainer = document.getElementById('playlist-container');
-    
+
     // Create elements to display playlist details
     const playlistName = document.createElement('p');
     playlistName.textContent = `Playlist Name: ${playlist.name}`;
@@ -229,7 +220,7 @@ function displaygetplayDetails(playlist) {
     const date = document.createElement('p');
     date.textContent = `Added At: ${playlist.tracks.items[0].added_at}`;
 
-   
+
     // Append elements to the playlist container
     playlistContainer.appendChild(playlistName);
     playlistContainer.appendChild(playlistDescription);

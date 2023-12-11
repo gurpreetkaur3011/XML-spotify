@@ -20,16 +20,16 @@ document.addEventListener('DOMContentLoaded', function () {
                     'Authorization': 'Bearer ' + token,
                 },
             })
-            .then(response => response.json())
-            .then(data => {
-                displayResults(data);
-            })
-            .catch(error => console.error('Error searching Spotify:', error));
+                .then(response => response.json())
+                .then(data => {
+                    displayResults(data);
+                })
+                .catch(error => console.error('Error searching Spotify:', error));
         });
     }
 
     const clientId = 'da7a73500577472fa4ca42bed4cb1f3e';
-    const clientSecret = 'dd71958f547f492fb6db0e57596ecc9c';   
+    const clientSecret = 'dd71958f547f492fb6db0e57596ecc9c';
 
 
     const getToken = async () => {
@@ -47,8 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     function displayResults(response) {
-        // Log the entire response to see its structure
-        console.log(response);
 
         if (!response || !response.albums || !response.albums.items) {
             console.error('Invalid response structure. Unable to display results.');
@@ -171,7 +169,7 @@ function fetchPlaylistDetails(accessToken, playlistId) {
             // Update the HTML to display the playlist details
             addSongsToPlaylist(accessToken, playlistId);
 
-            fetchgetplayDetails(accessToken, playlistId);            
+            fetchgetplayDetails(accessToken, playlistId);
         })
         .catch(error => console.error('Error fetching playlist details:', error));
 }
@@ -204,7 +202,7 @@ function addSongsToPlaylist(accessToken, playlistId) {
 
 function sleep(ms) {
     const start = Date.now();
-    while (Date.now() - start < ms) {}
+    while (Date.now() - start < ms) { }
 }
 
 function fetchgetplayDetails(accessToken, playlistId) {
@@ -226,7 +224,7 @@ function fetchgetplayDetails(accessToken, playlistId) {
 
 function displaygetplayDetails(playlist) {
     const playlistContainer = document.getElementById('playlist-container');
-    
+
     // Create elements to display playlist details
     const playlistName = document.createElement('p');
     playlistName.textContent = `Playlist Name: ${playlist.name}`;
@@ -249,7 +247,7 @@ function displaygetplayDetails(playlist) {
     const date = document.createElement('p');
     date.textContent = `Added At: ${playlist.tracks.items[0].added_at}`;
 
-   
+
     // Append elements to the playlist container
     playlistContainer.appendChild(playlistName);
     playlistContainer.appendChild(playlistDescription);

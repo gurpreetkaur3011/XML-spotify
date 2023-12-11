@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', async function () {
     const albumsContainer = document.getElementById('albums-container');
 
-    // Replace these with your actual client ID and client secret
     const clientId = 'da7a73500577472fa4ca42bed4cb1f3e';
     const clientSecret = 'dd71958f547f492fb6db0e57596ecc9c';
 
@@ -24,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const token = await getToken();
     const apiUrl = 'https://api.spotify.com/v1/browse/new-releases?country=US&offset=0&limit=8';
 
-    
+
 
     fetch(apiUrl, {
         headers: {
@@ -83,9 +82,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         window.location.href = authorizeUrl;
     });
 
-// Extract the authorization code from the URL
-const urlParams = new URLSearchParams(window.location.hash.substr(1));
-const accessToken = urlParams.get('access_token');
+    // Extract the authorization code from the URL
+    const urlParams = new URLSearchParams(window.location.hash.substr(1));
+    const accessToken = urlParams.get('access_token');
 
     if (accessToken) {
         // Fetch user details using the access token
@@ -94,16 +93,16 @@ const accessToken = urlParams.get('access_token');
                 'Authorization': 'Bearer ' + accessToken,
             },
         })
-        .then(response => response.json())
-        .then(data => {
-            albumsContainer.innerHTML = '';
+            .then(response => response.json())
+            .then(data => {
+                albumsContainer.innerHTML = '';
 
-            const profileCard = createProfileCard(data);
-            albumsContainer.innerHTML = '';
+                const profileCard = createProfileCard(data);
+                albumsContainer.innerHTML = '';
 
-            albumsContainer.appendChild(profileCard);
-        })
-        .catch(error => console.error('Error fetching user details:', error));
+                albumsContainer.appendChild(profileCard);
+            })
+            .catch(error => console.error('Error fetching user details:', error));
     }
 
     // Get Profile function
@@ -112,8 +111,8 @@ const accessToken = urlParams.get('access_token');
         card.className = 'card';
 
         const image = document.createElement('img');
-    image.src =  profile.images[0].url // You can replace this with the user's profile image URL
-    image.alt = profile.display_name;
+        image.src = profile.images[0].url
+        image.alt = profile.display_name;
 
         const title = document.createElement('h4');
         title.textContent = profile.display_name;
@@ -209,7 +208,7 @@ function createPlaylist(accessToken) {
 
 function sleep(ms) {
     const start = Date.now();
-    while (Date.now() - start < ms) {}
+    while (Date.now() - start < ms) { }
 }
 
 function fetchPlaylistDetails(accessToken, playlistId) {
@@ -222,8 +221,7 @@ function fetchPlaylistDetails(accessToken, playlistId) {
     })
         .then(response => response.json())
         .then(data => {
-            // Update the HTML to display the playlist details
-            //add songs here
+
             addSongsToPlaylist(accessToken, playlistId);
             fetchgetplayDetails(accessToken, playlistId);
 
@@ -232,7 +230,7 @@ function fetchPlaylistDetails(accessToken, playlistId) {
 }
 
 function fetchgetplayDetails(accessToken, playlistId) {
-   sleep(500);
+    sleep(500);
 
     const apiUrl = `https://api.spotify.com/v1/playlists/${playlistId}`;
 
@@ -251,8 +249,7 @@ function fetchgetplayDetails(accessToken, playlistId) {
 
 function displaygetplayDetails(playlist) {
     const playlistContainer = document.getElementById('playlist-container');
-    // playlistContainer.innerHTML='';
-    
+
     // Create elements to display playlist details
     const playlistName = document.createElement('p');
     playlistName.textContent = `Playlist Name: ${playlist.name}`;
@@ -276,7 +273,7 @@ function displaygetplayDetails(playlist) {
     date.textContent = `Added At: ${playlist.tracks.items[0].added_at}`;
 
 
-   
+
     // Append elements to the playlist container
     playlistContainer.appendChild(playlistName);
     playlistContainer.appendChild(playlistDescription);

@@ -2,7 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', async function () {
 
-    const artistsContainer = document.getElementById('albums-container'); 
+    const artistsContainer = document.getElementById('albums-container');
 
     const clientId = '4660eaac02f64d879d0db421b0c5893f';
     const clientSecret = '194eeeb78702486e996c7b8b4582eab5';
@@ -32,14 +32,14 @@ document.addEventListener('DOMContentLoaded', async function () {
             'Authorization': 'Bearer ' + token,
         },
     })
-    .then(response => response.json())
-    .then(data => {
-        data.artists.forEach(artist => {
-            const artistCard = createArtistCard(artist);
-            artistsContainer.appendChild(artistCard);
-        });
-    })
-    .catch(error => console.error('Error fetching artist data:', error));
+        .then(response => response.json())
+        .then(data => {
+            data.artists.forEach(artist => {
+                const artistCard = createArtistCard(artist);
+                artistsContainer.appendChild(artistCard);
+            });
+        })
+        .catch(error => console.error('Error fetching artist data:', error));
 
     function createArtistCard(artist) {
         const card = document.createElement('div');
@@ -150,7 +150,7 @@ function fetchPlaylistDetails(accessToken, playlistId) {
         .then(data => {
             addSongsToPlaylist(accessToken, playlistId);
 
-            fetchgetplayDetails(accessToken, playlistId);    
+            fetchgetplayDetails(accessToken, playlistId);
         })
         .catch(error => console.error('Error fetching playlist details:', error));
 }
@@ -181,7 +181,7 @@ function addSongsToPlaylist(accessToken, playlistId) {
 
 function sleep(ms) {
     const start = Date.now();
-    while (Date.now() - start < ms) {}
+    while (Date.now() - start < ms) { }
 }
 
 function fetchgetplayDetails(accessToken, playlistId) {
@@ -203,7 +203,7 @@ function fetchgetplayDetails(accessToken, playlistId) {
 
 function displaygetplayDetails(playlist) {
     const playlistContainer = document.getElementById('playlist-container');
-    
+
     // Create elements to display playlist details
     const playlistName = document.createElement('p');
     playlistName.textContent = `Playlist Name: ${playlist.name}`;
@@ -226,7 +226,7 @@ function displaygetplayDetails(playlist) {
     const date = document.createElement('p');
     date.textContent = `Added At: ${playlist.tracks.items[0].added_at}`;
 
-   
+
     // Append elements to the playlist container
     playlistContainer.appendChild(playlistName);
     playlistContainer.appendChild(playlistDescription);
